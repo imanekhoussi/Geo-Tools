@@ -1,0 +1,53 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+            <style>
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                    height: 100%;
+                    width: 100%;
+                }
+                #map { 
+                    height: 800px;
+                    width: 100%;
+                    margin: 0;
+                    padding: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div id="map"></div>
+            <script>
+                var map = L.map('map').setView([33.5123, -7.6241], 8);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                var startMarker, endMarker, line;
+
+                window.updateMapFromPython = function(lat1, lon1, lat2, lon2) {
+                    if (startMarker) map.removeLayer(startMarker);
+                    if (endMarker) map.removeLayer(endMarker);
+                    if (line) map.removeLayer(line);
+
+                    startMarker = L.marker([lat1, lon1])
+                        .bindPopup('Point initial (φ1, λ1)')
+                        .addTo(map);
+                    endMarker = L.marker([lat2, lon2])
+                        .bindPopup('Point final (φ2, λ2)')
+                        .addTo(map);
+                    line = L.polyline([[lat1, lon1], [lat2, lon2]], {
+                        color: 'red',
+                        weight: 3
+                    }).addTo(map);
+
+                    map.fitBounds([[lat1, lon1], [lat2, lon2]], {padding: [50, 50]});
+                }
+            </script>
+        </body>
+        </html>
+        
